@@ -19,6 +19,7 @@ DB_CONFIG = dict(
     database=os.getenv("DB_NAME")
 )
 
+
 def get_connection():
     return mysql.connector.connect(**DB_CONFIG)
 
