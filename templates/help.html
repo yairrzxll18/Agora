@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ayuda — AGORA</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/palette.css') }}">
+  <style>
+    .help-wrap{max-width:980px;margin:36px auto;padding:20px}
+    .help-card{padding:20px;border-radius:12px}
+    .help-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .topic{margin-top:12px}
+    .flash-box{padding:12px;border-radius:10px;margin-bottom:12px}
+  </style>
+</head>
+<body>
+  <div class="help-wrap">
+    <div class="help-card">
+      <!-- Mensajes flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div>
+            {% for category, msg in messages %}
+              <div class="flash-box {% if category=='success' %}flash-success{% elif category=='warning' %}flash-warning{% elif category=='danger' %}flash-danger{% endif %}">
+                {{ msg }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1 style="margin:0">Centro de ayuda</h1>
+          <div class="small">¿Necesitas reportar una publicación o comportamiento? Aquí puedes hacerlo.</div>
+        </div>
+        <div class="avatar">{{ username[:2] if username else 'US' }}</div>
+      </div>
+
+      <div class="topic">
+        <strong>¿Qué puedes reportar?</strong>
+        <ul>
+          <li>Contenido sexual</li>
+          <li>Violencia</li>
+          <li>Discurso de odio</li>
+          <li>Spam / Publicidad</li>
+          <li>Suplantación / Fraude</li>
+          <li>Otro comportamiento inapropiado</li>
+        </ul>
+      </div>
+
+      <div class="help-actions">
+        <a id="btn-crear-reporte" class="btn" href="{{ url_for('crear_reporte') }}">Crear reporte</a>
+        <a class="btn" href="{{ url_for('dashboard') }}">Volver al inicio</a>
+        <a class="btn ghost-light" href="mailto:soporte@agora.local">Contactar soporte</a>
+      </div>
+
+      <div class="topic">
+        <strong>Cómo funciona</strong>
+        <p class="small">Al enviar un reporte, el equipo de moderación lo recibirá y podrá tomar acciones desde el panel de administración. Si reportas una publicación, incluye el ID de la publicación o utiliza el botón de reportar desde la propia publicación.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('btn-crear-reporte');
+      if(!btn) return;
+      btn.addEventListener('click', function(e){
+        try{
+          const href = btn.getAttribute('href') || '';
+          if(!href || href === '#'){
+            e.preventDefault();
+            window.location.href = '/crear_reporte';
+          }
+        }catch(err){ }
+      });
+    })();
+  </script>
+</body>
+</html>

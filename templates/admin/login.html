@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ingreso — AGORA Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <style>
+    /* Animación y estilos extra solo para esta pantalla */
+    .login-hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(124,58,237,0.12), transparent 6%),
+                  radial-gradient(900px 500px at 90% 80%, rgba(6,182,212,0.08), transparent 6%),
+                  var(--bg-2);
+      overflow:hidden;
+    }
+    .glow-orb{
+      position:absolute;left:-120px;top:-80px;width:420px;height:420px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,0.28), transparent 30%),
+                  radial-gradient(circle at 70% 70%, rgba(6,182,212,0.15), transparent 40%);
+      filter:blur(40px);pointer-events:none;transform:translateZ(0);
+    }
+    .glow-orb.right{
+      left:auto;right:-120px;top:40px;
+      background: radial-gradient(circle at 30% 30%, rgba(6,182,212,0.22), transparent 30%),
+                  radial-gradient(circle at 70% 70%, rgba(124,58,237,0.12), transparent 40%);
+    }
+
+    .epic-card{
+      position:relative;
+      width:460px;
+      border-radius:16px;
+      padding:28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 20px 60px rgba(2,6,23,0.75);
+      backdrop-filter: blur(6px);
+      overflow:hidden;
+    }
+
+    .hero-head{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+    .hero-head .big-logo{
+      width:64px;height:64px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      box-shadow:0 12px 34px rgba(124,58,237,0.18);
+      display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:20px;
+    }
+    .hero-head h1{margin:0;font-size:18px}
+    .hero-sub{color:var(--muted);font-size:13px;margin-top:4px}
+
+    .input, textarea{transition:box-shadow .18s ease,border-color .18s ease}
+    .input:focus{outline:none;border-color:rgba(124,58,237,0.9);box-shadow:0 6px 30px rgba(124,58,237,0.08)}
+    .btn.epic{
+      background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      padding:12px 16px;border-radius:12px;font-weight:700;
+      box-shadow:0 12px 40px rgba(124,58,237,0.12), 0 0 18px rgba(6,182,212,0.04);
+      border: none;color:white;cursor:pointer;
+      transition:transform .14s ease, box-shadow .14s ease;
+    }
+    .btn.epic:active{transform:translateY(1px)}
+    .btn.ghost-light{
+      background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--gold);padding:10px 12px;border-radius:10px;
+    }
+
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.02),transparent);margin:18px 0}
+    .help{font-size:13px;color:var(--muted);margin-top:12px}
+
+    /* pequeña animación en logo */
+    .big-logo{animation:logo-bounce 4s ease-in-out infinite}
+    @keyframes logo-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  </style>
+</head>
+<body>
+  <div class="login-hero">
+    <div class="glow-orb" aria-hidden="true"></div>
+    <div class="glow-orb right" aria-hidden="true"></div>
+
+    <div class="epic-card" role="region" aria-label="Ingreso administrador">
+      <div class="hero-head">
+        <div class="big-logo">AG</div>
+        <div>
+          <h1>AGORA — Panel Administrador</h1>
+          <div class="hero-sub">Control total · Moderación · Configuración</div>
+        </div>
+      </div>
+
+      <form method="post" action="{{ url_for('login') }}">
+        <label class="small">Correo</label>
+        <input class="input" name="email" type="email" required placeholder="tu@correo.com" style="margin-bottom:12px">
+
+        <label class="small">Contraseña</label>
+        <input class="input" name="password" type="password" required placeholder="••••••••" style="margin-bottom:14px">
+
+        <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+          <button class="btn epic" type="submit">Entrar al panel</button>
+          <a class="btn ghost-light" href="{{ url_for('register') }}">Registrar admin</a>
+        </div>
+      </form>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="help">¿Problemas para entrar? Contacta al DBA o revisa credenciales.</div>
+        <div style="text-align:right">
+          <div class="small">v1.0 • AGORA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

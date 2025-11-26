@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pagos Universidad</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pagos.css') }}" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="{{ url_for('dashboard') }}" class="logo-area" style="text-decoration:none; color:inherit;">
+      <img src="{{ url_for('static', filename='imagenes/logo.jpg') }}" alt="Logo Agora"/>
+      <span class="logo-text">AGORA</span>
+    </a>
+    <span class="user-greeting">Hola, {{ username }}</span>
+    <a href="{{ url_for('dashboard') }}" class="dashboard-btn" style="position:absolute;top:18px;right:32px;padding:8px 18px;background:var(--navy);color:var(--beige);border-radius:var(--radius);text-decoration:none;font-weight:bold;transition:background 0.2s;">Ir al Dashboard</a>
+    <style>
+      .dashboard-btn:hover {
+        background: var(--sky);
+        color: var(--navy);
+      }
+    </style>
+  </header>
+  <div class="container">
+    <main class="main-content">
+
+
+      <!-- Modal visual Inscripción -->
+  <div style="background:var(--muted,#f2f4f6);border-radius:var(--radius);box-shadow:0 4px 24px #0002;padding:32px 24px 24px 24px;margin-bottom:40px;max-width:1400px;width:96vw;margin-left:auto;margin-right:auto;">
+        <h2 style="margin-bottom:24px;text-align:center;color:var(--navy);">Imágenes de Inscripción</h2>
+        <div style="display:flex; flex-direction:row; gap:64px; justify-content:center;align-items:flex-start;">
+          <div style="text-align:center;flex:1;">
+            <strong>Inscripción 1</strong><br>
+            <img src="{{ url_for('static', filename='imagenes/inscripcion.jpg') }}" alt="Inscripción 1" style="width:100%;max-width:600px; border-radius:var(--radius); box-shadow:0 2px 8px #0001;">
+          </div>
+          <div style="text-align:center;flex:1;">
+            <strong>Inscripción 2</strong><br>
+            <img src="{{ url_for('static', filename='imagenes/inscripcion2.jpg') }}" alt="Inscripción 2" style="width:100%;max-width:600px; border-radius:var(--radius); box-shadow:0 2px 8px #0001;">
+          </div>
+        </div>
+      </div>
+      <!-- Modal visual Cuatrimestre -->
+  <div style="background:var(--muted,#f2f4f6);border-radius:var(--radius);box-shadow:0 4px 24px #0002;padding:32px 24px 24px 24px;max-width:1400px;width:96vw;margin-left:auto;margin-right:auto;">
+        <h2 style="margin-bottom:24px;text-align:center;color:var(--navy);">Imágenes de Pagos de Cuatrimestre</h2>
+        <div style="display:flex; flex-direction:row; gap:64px; justify-content:center;align-items:flex-start;">
+          <div style="text-align:center;flex:1;">
+            <strong>Cuatrimestre 1</strong><br>
+            <img src="{{ url_for('static', filename='imagenes/cuatrimestre.jpg') }}" alt="Cuatrimestre 1" style="width:100%;max-width:600px; border-radius:var(--radius); box-shadow:0 2px 8px #0001;">
+          </div>
+          <div style="text-align:center;flex:1;">
+            <strong>Cuatrimestre 2</strong><br>
+            <img src="{{ url_for('static', filename='imagenes/cuatrimestre2.jpg') }}" alt="Cuatrimestre 2" style="width:100%;max-width:600px; border-radius:var(--radius); box-shadow:0 2px 8px #0001;">
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="footer">&copy; AGORA - 2025</footer>
+</body>
+</html>

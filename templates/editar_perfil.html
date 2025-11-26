@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editar perfil</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+  <style>
+    /* Pequeños ajustes para el formulario */
+    .edit-wrap{ max-width:900px; margin:40px auto; padding:20px; display:block; }
+    .edit-card{ background:var(--card-bg, #fff); padding:20px; border-radius:12px; border:1px solid rgba(0,0,0,0.06); box-shadow:0 8px 30px rgba(2,6,23,0.06); }
+    .form-row{ display:flex; gap:12px; margin-bottom:12px; }
+    .form-col{ flex:1; min-width:0; display:flex; flex-direction:column; gap:8px; }
+    label{ font-weight:700; color:var(--navy, #1B374C); }
+    .skills-grid{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+    .chip { cursor:pointer; user-select:none; }
+    .actions-row{ display:flex; gap:10px; margin-top:14px; align-items:center; }
+    @media (max-width:900px){ .form-row{ flex-direction:column } }
+  </style>
+</head>
+<body>
+  <main class="edit-wrap">
+    <section class="edit-card">
+      <h2>Editar perfil</h2>
+      <p style="color:var(--muted,#6b7882); margin-top:6px">Selecciona opciones o deja en blanco para mantener el valor actual.</p>
+
+      <form id="editForm" method="post" action="{{ url_for('editar_perfil') }}">
+        <div class="form-row">
+          <div class="form-col">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" value="{{ usuario.nombre_usuario if usuario and usuario.nombre_usuario else '' }}">
+          </div>
+
+          <div class="form-col">
+            <label for="correo">Correo</label>
+            <input id="correo" name="correo" type="email" placeholder="correo@ejemplo.com" value="{{ usuario.correo_usuario if usuario and usuario.correo_usuario else usuario.email if usuario and usuario.email else '' }}">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col">
+            <label for="rol">Rol / Título</label>
+            <select id="rol" name="rol">
+              <option value="">-- Mantener --</option>
+              {% set rol_actual = usuario.rol if usuario and usuario.rol else '' %}
+              {% for o in ['Software Engineer','Designer','Product Manager','Student','Profesor','Fullstack Developer'] %}
+                <option value="{{ o }}" {% if o == rol_actual %}selected{% endif %}>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-col">
+            <label for="ubicacion">Ubicación</label>
+            <select id="ubicacion" name="ubicacion">
+              <option value="">-- Mantener --</option>
+              {% set loc_actual = usuario.ubicacion if usuario and usuario.ubicacion else '' %}
+              {% for l in ['Los Ángeles, California','Ciudad de México, México','Lima, Perú','Barcelona, España','Bogotá, Colombia'] %}
+                <option value="{{ l }}" {% if l == loc_actual %}selected{% endif %}>{{ l }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-col">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="text" placeholder="+51 9..." value="{{ usuario.telefono if usuario and usuario.telefono else '' }}">
+          </div>
+
+          <div class="form-col">
+            <label>Skills</label>
+            <div class="skills-grid" id="skillsGrid">
+              {% set existing = usuario.skills if usuario and usuario.skills else '' %}
+              {% set existing_list = existing.split(',') if existing else [] %}
+              {% set all_skills = ['HTML','CSS','JavaScript','Python','Django','Flask','React','UI Design','SQL','Docker'] %}
+              {% for s in all_skills %}
+                <button type="button" class="chip {% if s in existing_list %}skill-active{% endif %}" data-value="{{ s }}" aria-pressed="{% if s in existing_list %}true{% else %}false{% endif %}">{{ s }}</button>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="skills" id="skillsInput" value="{{ existing }}">
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <button type="submit" class="btn edit">Guardar cambios</button>
+          <a href="{{ url_for('perfil') }}" class="btn ghost">Cancelar</a>
+          <a href="{{ url_for('dashboard') }}" class="btn ghost" style="margin-left:auto">Volver al dashboard</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Toggle chips and sync hidden input
+    (function(){
+      const grid = document.getElementById('skillsGrid');
+      const input = document.getElementById('skillsInput');
+
+      function currentSkills(){
+        return Array.from(grid.querySelectorAll('.chip.skill-active')).map(b => b.dataset.value);
+      }
+
+      function syncInput(){ input.value = currentSkills().join(','); }
+
+      grid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chip');
+        if(!btn) return;
+        btn.classList.toggle('skill-active');
+        btn.setAttribute('aria-pressed', btn.classList.contains('skill-active') ? 'true' : 'false');
+        syncInput();
+      });
+
+      // ensure input correct on page load
+      syncInput();
+    })();
+  </script>
+</body>
+</html>

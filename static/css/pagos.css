@@ -1,0 +1,125 @@
+/* === pagos.css === */
+/* Mantiene el estilo original del dashboard pero sin alterar la maquetación */
+:root {
+  --navy: #1B374C;
+  --beige: #E4D6AA;
+  --sky: #7BA6BE;
+  --sage: #C6CAAF;
+  --bg: #F7F7F7;
+  --muted: #f2f4f6;
+  --radius: 14px;
+}
+
+/* Reset básico */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--navy);
+  color: var(--beige);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo-area img {
+  height: 40px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.logo-text {
+  font-weight: bold;
+  font-size: 1.4rem;
+  margin-left: 8px;
+}
+
+.user-greeting {
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.payment-section {
+  background: var(--muted);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px #0002;
+  padding: 32px 24px;
+}
+
+.payment-section h2 {
+  text-align: center;
+  color: var(--navy);
+  margin-bottom: 24px;
+}
+
+.payment-section .images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  justify-content: center;
+}
+
+.payment-section .images > div {
+  text-align: center;
+  flex: 1 1 400px;
+}
+
+.payment-section img {
+  width: 100%;
+  max-width: 600px;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px #0001;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background: var(--navy);
+  color: var(--beige);
+  margin-top: auto;
+}
+
+/* Botón de volver */
+.dashboard-btn {
+  position: absolute;
+  top: 18px;
+  right: 32px;
+  padding: 8px 18px;
+  background: var(--beige);
+  color: var(--navy);
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+}
+.dashboard-btn:hover {
+  background: var(--sky);
+  color: var(--navy);
+}

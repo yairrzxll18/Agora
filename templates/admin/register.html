@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Registrar — AGORA Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <style>
+    /* Estilos extra para registro épico */
+    .reg-hero{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;
+      background: radial-gradient(900px 400px at 12% 18%, rgba(124,58,237,0.10), transparent 6%),
+                  radial-gradient(700px 350px at 88% 82%, rgba(6,182,212,0.07), transparent 6%),
+                  var(--bg-2);
+    }
+    .reg-card{
+      width:520px;border-radius:16px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(2,6,23,0.75);backdrop-filter:blur(6px);
+    }
+    .reg-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+    .reg-head .logo{
+      width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px;
+      box-shadow:0 14px 40px rgba(124,58,237,0.16);
+    }
+    .muted-sub{color:var(--muted);font-size:13px;margin-top:4px}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1/3}
+    .pw-strength{height:8px;border-radius:8px;background:rgba(255,255,255,0.03);overflow:hidden;margin-top:6px}
+    .pw-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));transition:width .18s ease}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    @media (max-width:600px){
+      .reg-card{width:100%}
+      .fields{grid-template-columns:1fr}
+      .full{grid-column:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="reg-hero">
+    <div class="reg-card" role="region" aria-label="Registro administrador">
+      <div class="reg-head">
+        <div class="logo">AG</div>
+        <div>
+          <h2 style="margin:0">Crear cuenta de administrador</h2>
+          <div class="muted-sub">Acceso seguro · Permisos totales · Moderación</div>
+        </div>
+      </div>
+
+      <form method="post" action="{{ url_for('register') }}">
+        <div class="fields">
+          <div>
+            <label class="small">Nombre</label>
+            <input class="input" name="nombre" required placeholder="Tu nombre visible">
+          </div>
+          <div>
+            <label class="small">Correo</label>
+            <input class="input" name="email" type="email" required placeholder="tu@correo.com">
+          </div>
+
+          <div class="full">
+            <label class="small">Contraseña</label>
+            <input id="password" class="input" name="password" type="password" required placeholder="Mínimo 8 caracteres">
+            <div class="pw-strength" aria-hidden="true"><div id="pwbar" class="pw-bar"></div></div>
+          </div>
+
+          <div class="full" style="display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:6px">
+            <div class="note">La contraseña debe incluir mayúsculas, números o símbolos para ser fuerte.</div>
+            <div>
+              <button class="btn epic" type="submit">Crear admin</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+        <div class="small">Al crear esta cuenta tendrás permisos de administrador.</div>
+        <a class="btn ghost" href="{{ url_for('login') }}">Volver al ingreso</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

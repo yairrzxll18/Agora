@@ -1,0 +1,257 @@
+/* Estilos Premium */
+.premium-badge {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #1B374C;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.premium-communities {
+    background: linear-gradient(135deg, #1B374C, #2C5B7C);
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.premium-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.premium-star {
+    font-size: 1.5em;
+    animation: shine 1.5s infinite alternate;
+}
+
+@keyframes shine {
+    from { opacity: 0.8; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1.05); }
+}
+
+.premium-communities h3 {
+    font-size: 1.3em;
+    margin: 0;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.community-search {
+    margin-bottom: 20px;
+}
+
+.community-search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 0.9em;
+}
+
+.community-search input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.community-categories h4 {
+    color: #FFD700;
+    font-size: 0.9em;
+    margin: 15px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.community-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.community-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.community-item:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateX(5px);
+}
+
+.community-icon {
+    font-size: 1.2em;
+    min-width: 24px;
+    text-align: center;
+}
+
+.community-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.community-name {
+    font-weight: 500;
+}
+
+.community-members {
+    font-size: 0.8em;
+    color: rgba(255,255,255,0.7);
+}
+
+/* Estilos para la versión bloqueada */
+.communities.locked {
+    background: linear-gradient(135deg, #f5f7fa, #e4e8ec);
+    padding: 25px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.lock-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.communities.locked h3 {
+    color: #1B374C;
+    margin-bottom: 15px;
+}
+
+.preview-communities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 15px 0;
+    opacity: 0.7;
+}
+
+.preview-item {
+    background: rgba(27,55,76,0.1);
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.9em;
+}
+
+/* Estilos para la ubicación */
+.location {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    font-size: 0.9em;
+}
+
+.location h4 {
+    margin: 0 0 10px 0;
+    color: #1B374C;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.location small {
+    color: #666;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Hacer el contenedor scrollable sin mostrar la barra */
+.community-categories {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    padding-right: 5px;
+}
+
+/* Ocultar scrollbar para Chrome, Safari y Opera */
+.community-categories::-webkit-scrollbar {
+    display: none;
+}
+
+.community-item:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.communities.locked {
+    background: rgba(27,55,76,0.05);
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.communities.locked h3 {
+    color: #1B374C;
+    margin-bottom: 10px;
+}
+
+.upgrade-btn {
+    display: inline-block;
+    background: #FFD700;
+    color: #1B374C;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: transform 0.2s;
+}
+
+.upgrade-btn:hover {
+    transform: scale(1.05);
+}
+
+.upgrade-link {
+    color: #FFD700;
+    text-decoration: none;
+    margin-left: 8px;
+    font-weight: bold;
+}
+
+.upgrade-link:hover {
+    text-decoration: underline;
+}
+
+/* Iconos Premium */
+.premium-icon {
+    font-size: 1.2em;
+    color: #FFD700;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+/* Badge para contenido premium */
+.premium-content-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #1B374C;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.8em;
+    font-weight: bold;
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crear Pago · Admin — AGORA</title>
+  <style>
+    :root{
+      --dark:#1B374C;
+      --gold:#E4D6AA;
+      --sky:#7BA6BE;
+      --sage:#C6CAAF;
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.10);
+    }
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:var(--dark);background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(123,166,190,0.08), transparent 10%),
+      radial-gradient(900px 400px at 90% 90%, rgba(198,202,175,0.06), transparent 10%),
+      var(--dark);
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    .wrap{max-width:1200px;margin:36px auto;padding:28px;display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
+    /* HERO CARD */
+    .hero{
+      background: linear-gradient(180deg, rgba(228,214,170,0.06), rgba(123,166,190,0.04));
+      border: 1px solid rgba(228,214,170,0.12);
+      border-radius:18px;
+      padding:28px;
+      box-shadow: 0 30px 80px rgba(11,19,28,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+      position:relative; overflow:hidden;
+      backdrop-filter: blur(6px);
+    }
+    .hero:before{
+      content:''; position:absolute; right:-120px; top:-80px; width:420px; height:420px;
+      background: radial-gradient(circle at 30% 30%, rgba(228,214,170,0.12), transparent 20%), linear-gradient(45deg, rgba(123,166,190,0.06), rgba(198,202,175,0.04));
+      transform: rotate(18deg); filter: blur(18px); opacity:0.95;
+    }
+    .hero h1{margin:0;font-size:30px;color:var(--gold);font-weight:900;letter-spacing:0.6px}
+    .hero p{margin:8px 0 18px;color:var(--sky);font-weight:600}
+    /* FORM */
+    form.pay-form{display:flex;flex-direction:column;gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    label{font-size:13px;color:var(--gold);font-weight:800}
+    input[type="text"], textarea, input[type="date"]{
+      border:1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      padding:12px 14px;border-radius:10px;color:#07202a;font-weight:600;
+      outline:none; transition:all .18s ease;
+      box-shadow: 0 6px 18px rgba(11,19,28,0.45) inset;
+    }
+    textarea{min-height:120px;resize:vertical}
+    input:focus, textarea:focus{transform:translateY(-2px); box-shadow: 0 18px 40px rgba(123,166,190,0.12), 0 2px 8px rgba(228,214,170,0.06); border-color:var(--sky)}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    /* CTA */
+    .cta{
+      margin-top:10px; display:flex; gap:12px; align-items:center;
+    }
+    .btn-primary{
+      position:relative; overflow:hidden;
+      background: linear-gradient(90deg,var(--gold),var(--sky));
+      color:#07202a;border:none;padding:12px 18px;border-radius:12px;font-weight:900;
+      cursor:pointer; box-shadow: 0 18px 50px rgba(123,166,190,0.12);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .btn-primary:hover{transform:translateY(-4px); box-shadow: 0 26px 80px rgba(123,166,190,0.18)}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--gold);padding:10px 14px;border-radius:10px;font-weight:700}
+    .btn-primary .shine{position:absolute;inset:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);animation:shine 3s linear infinite;opacity:0.8;pointer-events:none}
+    @keyframes shine{0%{transform:translateX(-120%)}50%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+    /* SIDE PREVIEW */
+    .side{
+      position:relative;
+    }
+    .preview-card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius:16px;padding:20px;border:1px solid rgba(228,214,170,0.08);
+      box-shadow: 0 20px 60px rgba(11,19,28,0.6);
+      color:var(--gold);
+    }
+    .preview-head{display:flex;align-items:center;gap:12px}
+    .preview-badge{background:var(--sky);color:#07202a;padding:8px;border-radius:10px;font-weight:900}
+    .preview-title{font-weight:900;font-size:18px;color:var(--gold)}
+    .preview-meta{color:var(--sage);font-size:13px;margin-top:8px}
+    .preview-visual{height:160px;border-radius:12px;margin-top:14px;background:
+      linear-gradient(135deg, rgba(123,166,190,0.18), rgba(228,214,170,0.10)),
+      radial-gradient(circle at 10% 20%, rgba(228,214,170,0.12), transparent 8%),
+      rgba(255,255,255,0.02);
+      display:flex;align-items:center;justify-content:center;color:var(--dark);font-weight:900;font-size:22px
+    }
+    .helper{font-size:12px;color:var(--sky);margin-top:8px}
+    .actions{display:flex;gap:8px;margin-top:12px}
+    /* responsive */
+    @media (max-width:980px){
+      .wrap{grid-template-columns:1fr; padding:18px}
+      .side{order:-1}
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width:1400px;margin:18px auto;padding:0 18px;">
+    <div class="wrap" role="main">
+      <section class="hero" aria-labelledby="h-title">
+        <h1 id="h-title">Crear fecha de pago — Admin</h1>
+        <p>Interfaz 4K: épica, limpia y profesional para crear recordatorios / fechas de pago.</p>
+
+        <form class="pay-form" method="POST" action="{{ url_for('pagos_crear') }}">
+          <div class="field">
+            <label for="titulo">Título</label>
+            <input id="titulo" name="titulo" type="text" placeholder="Ej. Pago colegiatura noviembre" required />
+          </div>
+
+          <div class="field">
+            <label for="descripcion">Descripción breve</label>
+            <textarea id="descripcion" name="descripcion" placeholder="Detalle del pago, instrucciones o notas"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col field">
+              <label for="fecha_pago">Fecha de pago</label>
+              <input id="fecha_pago" name="fecha_pago" type="date" required />
+            </div>
+            <div class="col field">
+              <label for="meta">Meta / Monto (opcional)</label>
+              <input id="meta" name="meta" type="text" placeholder="$0.00" />
+            </div>
+          </div>
+
+          <div class="cta">
+            <button type="submit" class="btn-primary">
+              <span class="btn-label"> Crear Fecha</span>
+              <span class="shine" aria-hidden="true"></span>
+            </button>
+            <a href="{{ url_for('pagos') }}" class="btn-ghost" role="button">Cancelar</a>
+          </div>
+
+          <div class="helper">Se notificará a los usuarios según la configuración de notificaciones.</div>
+        </form>
+      </section>
+
+      <aside class="side">
+        <div class="preview-card" aria-hidden="true">
+          <div class="preview-head">
+            <div class="preview-badge">PRÓXIMO</div>
+            <div>
+              <div class="preview-title">Resumen visual</div>
+              <div class="preview-meta">Vista previa de la tarjeta de notificación</div>
+            </div>
+          </div>
+
+          <div class="preview-visual"> 01 Nov — Pago: $99</div>
+
+          <div class="actions">
+            <a class="btn-ghost" href="{{ url_for('pagos') }}">Ver todas</a>
+            <a class="btn-primary" href="{{ url_for('pagos_crear') }}" style="padding:10px 12px">Duplicar</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>

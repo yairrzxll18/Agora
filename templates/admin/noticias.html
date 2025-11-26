@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Admin — Noticias</title>
+</head>
+<body>
+  {% extends "admin/layout.html" %}
+  {% block title %}Noticias — Admin{% endblock %}
+  {% block header %}<strong>Noticias</strong>{% endblock %}
+  {% block content %}
+    <div class="card col-12" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2 style="margin:0">Noticias</h2>
+        <div class="small">Crea, edita y elimina anuncios.</div>
+      </div>
+      <div>
+        <a class="btn" href="{{ url_for('noticias_crear') }}">Crear noticia</a>
+      </div>
+    </div>
+
+    <div class="card col-12">
+      {% if noticias %}
+        <table class="table">
+          <thead><tr><th>Título</th><th>Autor</th><th>Fecha</th><th></th></tr></thead>
+          <tbody>
+          {% for n in noticias %}
+            <tr>
+              <td><strong>{{ n.titulo }}</strong><div class="small">{{ n.contenido[:120] }}{% if n.contenido|length>120 %}...{% endif %}</div></td>
+              <td class="row-muted">{{ n.nombre_usuario or 'Admin' }}</td>
+              <td class="row-muted">{{ n.fecha_creacion }}</td>
+              <td>
+                <form action="{{ url_for('noticias_eliminar', id_noticia=n.id_noticia) }}" method="post" style="display:inline">
+                  <button class="btn danger" type="submit">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No hay noticias.</p>
+      {% endif %}
+    </div>
+  {% endblock %}
+</body>
+</html>

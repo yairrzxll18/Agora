@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Extraordinarios</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/extraordinarios.css') }}">
+</head>
+<body>
+  <div class="main-extra">
+    <h1>Extraordinarios</h1>
+    <p>Consulta aquí la información sobre pagos y trámites de exámenes extraordinarios.</p>
+    <div class="card-extra">
+      <strong>¿Qué es un extraordinario?</strong>
+      <p>Un extraordinario es una oportunidad adicional para acreditar una materia no aprobada en el periodo regular.</p>
+      <strong>Requisitos para presentar extraordinario:</strong>
+      <ul>
+        <li>Estar inscrito en la universidad</li>
+        <li>Haber realizado el pago correspondiente en caja</li>
+        <li>Presentar comprobante de pago al docente</li>
+        <li>Registrarse en el sistema de control escolar</li>
+      </ul>
+      <strong>Costos y fechas:</strong>
+      <ul>
+        <li>Costo por materia: $XXX MXN</li>
+        <li>Fechas de aplicación: consultar en control escolar</li>
+      </ul>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="extra-btn">Volver al Dashboard</a>
+  </div>
+</body>
+</html>

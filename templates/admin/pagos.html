@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Pagos — Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">AG</div>
+        <div>
+          <h2>AGORA Admin</h2>
+          <div class="small">Panel de administración</div>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.path=='/' else '' }}">Inicio</a>
+        <a href="{{ url_for('noticias') }}" class="{{ 'active' if request.path.startswith('/noticias') else '' }}">Noticias</a>
+        <a href="{{ url_for('reportes') }}" class="{{ 'active' if request.path.startswith('/reportes') else '' }}">Reportes</a>
+        <a href="{{ url_for('pagos') }}" class="{{ 'active' if request.path.startswith('/pagos') else '' }}">Pagos</a>
+        <a href="{{ url_for('limites') }}" class="{{ 'active' if request.path.startswith('/limites') else '' }}">Límites</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+      </nav>
+
+      <div style="margin-top:auto">
+        <div class="small">Versión</div>
+        <div class="small">1.0 • &copy; Agora</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="crumbs"><strong>Fechas de pago</strong></div>
+        <div class="actions"><div class="avatar">{{ session.get('admin_username','AD')[:2] }}</div></div>
+      </header>
+
+      <section class="grid">
+        <div class="card col-12" style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 style="margin:0">Pagos</h3>
+            <div class="small">Gestiona fechas y anuncios de pago</div>
+          </div>
+          <a class="btn" href="{{ url_for('pagos_crear') }}">Crear fecha</a>
+        </div>
+
+        <div class="card col-12">
+          {% if pagos %}
+            <table class="table">
+              <thead><tr><th>Fecha</th><th>Título</th><th>Descripción</th></tr></thead>
+              <tbody>
+                {% for p in pagos %}
+                  <tr>
+                    <td class="row-muted">{{ p.fecha_pago }}</td>
+                    <td><strong>{{ p.titulo }}</strong></td>
+                    <td class="small">{{ p.descripcion }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p>No hay fechas registradas.</p>
+          {% endif %}
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

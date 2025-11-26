@@ -1,0 +1,92 @@
+:root {
+  --primary: #1B374C;
+  --secondary: #E4D6AA;
+  --accent: #7BA6BE;
+  --tertiary: #C6CAAF;
+  --accent-dark: #1B374C;
+  --accent-light: #7BA6BE;
+  --gold: #E4D6AA;
+}
+
+body {
+  background: linear-gradient(135deg, var(--primary), #0a1f2e);
+  color: #e6eef8;
+}
+
+.help-card {
+  background: linear-gradient(180deg, rgba(227, 214, 170, 0.04), rgba(123, 166, 190, 0.02));
+  border: 1px solid rgba(228, 214, 170, 0.08);
+  box-shadow: 0 20px 60px rgba(27, 55, 76, 0.3);
+}
+
+.btn {
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  color: #fff;
+  border: 1px solid rgba(228, 214, 170, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+  box-shadow: 0 8px 24px rgba(228, 214, 170, 0.12);
+}
+
+.btn.ghost-light {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.btn.ghost-light:hover {
+  background: rgba(228, 214, 170, 0.1);
+}
+
+.avatar {
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.flash-success {
+  background: linear-gradient(90deg, rgba(123, 166, 190, 0.1), rgba(198, 202, 175, 0.08));
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
+.flash-warning {
+  background: rgba(228, 214, 170, 0.08);
+  color: var(--gold);
+  border-left: 3px solid var(--gold);
+}
+
+.flash-danger {
+  background: rgba(220, 100, 100, 0.08);
+  color: #ff6b6b;
+  border-left: 3px solid #ff6b6b;
+}
+
+.hero {
+  background: linear-gradient(90deg, rgba(27, 55, 76, 0.2), rgba(123, 166, 190, 0.08));
+  border: 1px solid rgba(228, 214, 170, 0.06);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gold);
+}
+
+.topic {
+  color: rgba(230, 238, 248, 0.8);
+}
+
+.topic strong {
+  color: var(--secondary);
+}
+
+.small {
+  color: rgba(230, 238, 248, 0.6);
+}

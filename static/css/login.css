@@ -1,0 +1,126 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: url("../imagenes/fondo.jpg") no-repeat center top;
+    background-size: cover;
+    font-family: sans-serif;
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Caja del login */
+.login-uta {
+    width: 320px;
+    min-height: 420px;
+    background: rgba(255, 255, 255, 0.25); /* Blanco semitransparente */
+    color: #000;
+    box-sizing: border-box;
+    padding: 70px 30px 30px 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(20px); /* Difuminado del fondo */
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); /* Sombra para resaltar */
+    border: 1px solid rgba(255,255,255,0.3); /* Borde sutil para definir límites */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-uta .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    object-fit: cover;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.login-uta h1 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.login-uta label {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    display: block;
+}
+
+.login-uta input {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.4);
+    outline: none;
+    background: rgba(255, 255, 255, 0.2); /* Fondo semi-transparente con blur */
+    color: #000;
+    backdrop-filter: blur(10px); /* Difuminado interno */
+    -webkit-backdrop-filter: blur(10px);
+    box-sizing: border-box;
+}
+
+.login-uta input[type="submit"] {
+    height: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: none;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.login-uta input[type="submit"]:hover {
+    background: rgba(0, 0, 0, 1);
+}
+
+.login-uta a {
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 20px;
+    color: #000;
+}
+
+.login-uta a:hover {
+    color: orangered;
+}
+
+/* Responsividad */
+@media (max-width: 480px) {
+  .login-uta {
+    padding: 60px 20px 20px 20px;
+    width: 95vw;
+    min-width: unset;
+  }
+
+  .login-uta .avatar {
+    width: 80px;
+    height: 80px;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .login-uta h1 {
+    font-size: 18px;
+  }
+
+  .login-uta input[type="submit"] {
+    font-size: 18px;
+  }
+}

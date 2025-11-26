@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Crear reporte — AGORA</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <style>
+    .wrap{max-width:920px;margin:36px auto;padding:18px}
+    .card{background:rgba(255,255,255,0.02);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .options{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .option{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);cursor:pointer;background:transparent}
+    .option input{margin-right:8px}
+    .hint{color:var(--muted);font-size:13px;margin-top:10px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2>Crear reporte</h2>
+      <div class="small">Reporta contenido o comportamientos. El equipo de moderación lo recibirá en el panel admin.</div>
+
+      <form method="post" style="margin-top:14px">
+        <div style="margin-bottom:12px">
+          <label class="small">ID de publicación (opcional)</label>
+          <input class="input" name="id_publicacion" value="{{ id_publicacion or '' }}" placeholder="Ej: 123 (si aplicable)">
+        </div>
+
+        <div style="margin-bottom:12px">
+          <label class="small">Motivo</label>
+          <select name="motivo" class="input" required>
+            <option value="">-- Selecciona motivo --</option>
+            <option>Contenido sexual</option>
+            <option>Violencia</option>
+            <option>Discurso de odio</option>
+            <option>Spam / Publicidad</option>
+            <option>Inapropiado</option>
+            <option>Suplantación / Fraude</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <label class="small">Descripción</label>
+          <textarea name="descripcion" class="input" required placeholder="Explica brevemente qué ocurre..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;align-items:center">
+          <a class="btn ghost" href="{{ url_for('dashboard') }}">Cancelar</a>
+          <button class="btn" type="submit">Enviar reporte</button>
+        </div>
+
+        <div class="hint">Tu reporte será visible para moderadores. Incluye evidencia o ID de publicación para agilizar la revisión.</div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

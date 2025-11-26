@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar a Premium - AGORA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium.css') }}">
+    <style>
+        .premium-features {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .premium-card {
+            background: linear-gradient(135deg, #1B374C, #2C5B7C);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feature-icon {
+            font-size: 1.5em;
+            color: #FFD700;
+        }
+
+        .upgrade-button {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #1B374C;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: block;
+            margin: 30px auto;
+            text-decoration: none;
+            width: fit-content;
+        }
+
+        .upgrade-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo-area">
+            <img src="{{ url_for('static', filename='imagenes/logo.jpg') }}" alt="Logo Agora"/>
+            <span class="logo-text">AGORA</span>
+        </div>
+        <span class="user-greeting">Hola, {{ username }}</span>
+        <a href="{{ url_for('dashboard') }}" class="logout-btn">Volver al Dashboard</a>
+    </header>
+
+    <div class="premium-features">
+        <div class="premium-card">
+            <h1>⭐ Actualiza a AGORA Premium</h1>
+            <p>Desbloquea todas las características y mejora tu experiencia de aprendizaje</p>
+            
+            <ul class="feature-list">
+                <li class="feature-item">
+                    <span class="feature-icon">💬</span>
+                    <span>Interacciones ilimitadas: Pregunta y responde sin restricciones</span>
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">👥</span>
+                    <span>Acceso a comunidades exclusivas de estudiantes</span>
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">🎨</span>
+                    <span>Íconos y elementos visuales premium</span>
+                </li>
+                <li class="feature-item">
+                    <span class="feature-icon">📚</span>
+                    <span>Recursos educativos exclusivos</span>
+                </li>
+            </ul>
+
+            <form action="{{ url_for('actualizar_premium') }}" method="POST">
+                <button type="submit" class="upgrade-button">
+                    Actualizar a Premium Ahora
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">&copy; AGORA - 2025</footer>
+</body>
+</html>

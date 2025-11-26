@@ -1,0 +1,188 @@
+:root{
+  --navy: #0f2540;
+  --beige: #F3E9CF;
+  --sky: #4EC5D7;
+  --rose: #FF6B6B;
+  --violet: #8A63FF;
+  --bg: #0b1020;
+  --card-bg: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.06);
+  --muted: rgba(255,255,255,0.75);
+  --accent: linear-gradient(90deg,var(--violet),var(--sky));
+  --radius: 16px;
+  --shadow-lg: 0 20px 50px rgba(2,6,23,0.6);
+}
+
+/* Reset ligero */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: radial-gradient(1200px 500px at 10% 10%, rgba(138,99,255,0.14), transparent),
+              radial-gradient(800px 400px at 90% 90%, rgba(78,197,215,0.06), transparent),
+              var(--bg);
+  color: #eef6ff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:28px;
+}
+
+/* Contenedor */
+.profile-main{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns: 1fr 340px;
+  gap:28px;
+  align-items:start;
+}
+
+/* Tarjeta principal con efecto vidrio */
+.profile-card{
+  position:relative;
+  border-radius: calc(var(--radius) + 6px);
+  overflow:visible;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* Banner degradado grande y vibrante */
+.banner{
+  height:160px;
+  border-top-left-radius: calc(var(--radius) + 6px);
+  border-top-right-radius: calc(var(--radius) + 6px);
+  background: linear-gradient(120deg, #ff7eb3 0%, #ffb86b 25%, #7bdff6 55%, #8a63ff 100%);
+  position:relative;
+  overflow:hidden;
+  box-shadow: inset 0 -30px 80px rgba(0,0,0,0.18);
+}
+
+/* overlay sutil de curvas */
+.banner::after{
+  content:'';
+  position:absolute; left:-10%; right:-10%; bottom:-10%;
+  height:120px; background: radial-gradient(400px 120px at 10% 20%, rgba(255,255,255,0.06), transparent);
+  transform: rotate(-6deg); opacity:0.9;
+}
+
+/* Header con avatar superpuesto */
+.profile-header{
+  display:flex;
+  gap:24px;
+  align-items:flex-start;
+  margin-top:-64px;
+  padding:22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 0 0 calc(var(--radius) + 6px) calc(var(--radius) + 6px);
+  position:relative;
+}
+
+/* Avatar circular destacado */
+.profile-avatar{
+  width:128px; height:128px; border-radius:50%;
+  background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;
+  border:6px solid rgba(255,255,255,0.9);
+  box-shadow: 0 18px 40px rgba(8,12,30,0.65);
+  transform: translateY(-6px);
+}
+.profile-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Nombre, rol y ubicacion */
+.profile-info{ flex:1; min-width:0; }
+.profile-info h1{
+  margin:0 0 6px 0;
+  font-size:1.8rem;
+  letter-spacing:-0.6px;
+  color: #fff;
+  text-shadow: 0 6px 20px rgba(10,12,30,0.6);
+}
+.role{
+  margin:0; color: rgba(255,255,255,0.85); font-weight:700; opacity:0.95;
+}
+.location{
+  margin:6px 0 12px 0; color: rgba(255,255,255,0.72); font-size:0.95rem;
+}
+
+/* Acciones principales */
+.profile-actions{ display:flex; gap:12px; align-items:center; margin-top:14px; flex-wrap:wrap; }
+.btn{
+  display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:12px;
+  font-weight:700; text-decoration:none; cursor:pointer; transition:transform .18s, box-shadow .18s;
+  border: none;
+}
+.btn.edit{
+  background: var(--accent);
+  color: #061025;
+  box-shadow: 0 8px 30px rgba(138,99,255,0.14);
+}
+.btn.edit:hover{ transform:translateY(-4px) scale(1.01); box-shadow: 0 16px 40px rgba(138,99,255,0.22); }
+
+.btn.ghost{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.btn.ghost:hover{ transform:translateY(-3px); background: rgba(255,255,255,0.05); }
+
+/* Skills chips */
+.skills{ margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; }
+.chip{
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  padding:7px 12px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:0.92rem;
+  border:1px solid rgba(255,255,255,0.03);
+  transition: transform .12s, background .12s;
+}
+.chip:hover{ transform:translateY(-4px); background: rgba(255,255,255,0.06); }
+
+/* Cuerpo con cards: tarjetas de acción epicas */
+.profile-body{ padding:20px; background: transparent; }
+.cards{ display:flex; gap:18px; align-items:stretch; flex-wrap:wrap; }
+.action-card{
+  flex:1; min-width:220px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;
+  box-shadow: 0 12px 34px rgba(7,10,24,0.6); border: 1px solid rgba(255,255,255,0.03);
+  transition: transform .16s, box-shadow .16s;
+}
+.action-card:hover{ transform: translateY(-8px); box-shadow: 0 30px 70px rgba(7,10,24,0.7); }
+.card-icon{ font-size:22px; width:44px; height:44px; display:inline-grid; place-items:center; border-radius:10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color:#fff; }
+
+/* Sidebar */
+.profile-side .profile-card-side{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+  padding:18px; border-radius:14px; box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.profile-side h4{ margin:0 0 10px 0; color:#fff; }
+
+/* Resumen - detalles */
+.profile-side p{ color: rgba(255,255,255,0.82); margin:6px 0; font-weight:600; }
+
+/* Toastr override (si ya hay estilos) */
+#toasts .toast{ color:#061025; font-weight:800; border-radius:10px; padding:10px 14px; }
+.toast-success{ background: linear-gradient(90deg,#32D583,#1D9A7A); color:#031216; }
+.toast-danger{ background: linear-gradient(90deg,#ff6b6b,#ff9a9a); color:#2b0b0b; }
+.toast-warning{ background: linear-gradient(90deg,#ffb86b,#ff8a00); color:#2b1805; }
+
+/* Helpers */
+.titulo-principal{ color:#fff; }
+
+/* Responsive */
+@media (max-width:1000px){
+  .profile-main{ grid-template-columns: 1fr; padding:18px; }
+  .profile-avatar{ width:96px; height:96px; border:5px solid #fff; }
+  .banner{ height:120px; }
+  .cards{ flex-direction:column; }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+}

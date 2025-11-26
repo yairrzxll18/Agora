@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Premium — AGORA</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/palette.css') }}">
+  <style>
+    body { background: linear-gradient(135deg, #1B374C 0%, #0a1f2e 50%, rgba(27,55,76,0.8) 100%); min-height:100vh }
+    .hero-wrap { max-width:1200px; margin:0 auto; padding:40px 20px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center }
+    .hero-text h1 { font-size:56px; font-weight:900; margin:0 0 12px; background:linear-gradient(90deg, var(--secondary), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+    .hero-text p { font-size:18px; color:rgba(230,238,248,0.8); margin:0 0 20px; line-height:1.6 }
+    .benefits { display:flex; flex-direction:column; gap:12px; margin:20px 0 }
+    .benefit { display:flex; gap:10px; align-items:center }
+    .benefit::before { content:'✓'; color:var(--accent); font-size:20px; font-weight:900; }
+    .benefit span { color:rgba(230,238,248,0.9) }
+
+    .pricing-card { background:linear-gradient(180deg, rgba(228,214,170,0.08), rgba(123,166,190,0.04)); border:2px solid rgba(228,214,170,0.2); border-radius:16px; padding:40px; text-align:center; position:relative; overflow:hidden }
+    .pricing-card::before { content:''; position:absolute; inset:0; background:linear-gradient(45deg, transparent 30%, rgba(228,214,170,0.04), transparent 70%); pointer-events:none }
+    .pricing-card * { position:relative; z-index:1 }
+    
+    .badge { display:inline-block; background:linear-gradient(90deg, var(--gold), #f3b600); color:#0b0b0b; padding:6px 14px; border-radius:999px; font-size:12px; font-weight:800; margin-bottom:16px }
+    .price { font-size:64px; font-weight:900; color:var(--secondary); margin:12px 0 }
+    .price-sub { color:rgba(230,238,248,0.6); font-size:14px }
+
+    .features { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:24px 0; text-align:left }
+    .feature { display:flex; gap:8px; align-items:flex-start }
+    .feature::before { content:'⚡'; font-size:18px; flex:0 0 auto }
+    .feature span { font-size:14px; color:rgba(230,238,248,0.85) }
+
+    .cta-btn { background:linear-gradient(90deg, var(--secondary), #f3b600); color:#0b0b0b; border:none; padding:16px 32px; border-radius:12px; font-size:16px; font-weight:800; cursor:pointer; width:100%; margin-top:20px; transition:all .3s ease; box-shadow:0 12px 40px rgba(228,214,170,0.2) }
+    .cta-btn:hover { transform:translateY(-2px); box-shadow:0 18px 60px rgba(228,214,170,0.35) }
+
+    .faq-section { max-width:900px; margin:60px auto; padding:40px }
+    .faq-title { font-size:36px; font-weight:900; color:var(--secondary); text-align:center; margin-bottom:32px }
+    .faq-item { margin-bottom:16px }
+    .faq-item details { background:rgba(255,255,255,0.02); border:1px solid rgba(228,214,170,0.06); border-radius:10px; padding:16px; cursor:pointer }
+    .faq-item summary { font-weight:700; color:rgba(230,238,248,0.9); user-select:none }
+    .faq-item summary:hover { color:var(--accent) }
+    .faq-item p { margin:12px 0 0; color:rgba(230,238,248,0.7); font-size:14px }
+
+    .back-link { display:inline-block; margin-bottom:20px; color:var(--accent); text-decoration:none; font-weight:700 }
+    .back-link:hover { color:var(--secondary) }
+
+    .user-greeting { color: rgba(230,238,248,0.9); font-size: 18px; margin-bottom: 20px; }
+    .premium-badge { background: linear-gradient(90deg, var(--gold), #f3b600); color: #0b0b0b; padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; margin-left: 8px; }
+    .center-actions { display: flex; gap: 12px; align-items: center; margin-top: 8px; }
+    .search { display: flex; flex: 1; gap: 8px; }
+    .search input { flex: 1; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(255,255,255,0.03); color: rgba(230,238,248,0.9); }
+    .search button { padding: 10px 16px; border: none; border-radius: 8px; background: var(--accent); color: #0b0b0b; font-weight: 700; cursor: pointer; transition: background 0.3s }
+    .search button:hover { background: var(--secondary) }
+    .interaction-counter { display: flex; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(228,214,170,0.06); border-radius: 10px; padding: 10px 16px; gap: 8px; }
+    .counter-label { color: rgba(230,238,248,0.9); font-size: 14px; }
+    .counter-value { color: var(--accent); font-weight: 700; }
+    .upgrade-link-header { color: var(--accent); font-weight: 700; text-decoration: none; }
+    .upgrade-link-header:hover { text-decoration: underline; }
+    .profile-icon { color: rgba(230,238,248,0.9); font-size: 18px; }
+    .logout-btn { background: var(--red); color: #fff; padding: 10px 16px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.3s }
+    .logout-btn:hover { background: darkred }
+
+    @media (max-width:900px) {
+      .hero-wrap { grid-template-columns:1fr; padding:24px 20px }
+      .hero-text h1 { font-size:36px }
+      .price { font-size:48px }
+      .features { grid-template-columns:1fr }
+      .center-actions { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div style="padding:20px; border-bottom:1px solid rgba(255,255,255,0.03)">
+    <div style="max-width:1200px; margin:0 auto">
+      <a class="back-link" href="{{ url_for('dashboard') }}">← Volver al dashboard</a>
+    </div>
+  </div>
+
+  <section class="hero-wrap">
+    <div class="hero-text">
+      <h1>Únete a Premium</h1>
+      <p>Desbloquea el poder total de AGORA sin límites. Publica, comenta y colabora sin restricciones.</p>
+      
+      <div class="benefits">
+        <div class="benefit"><span>Publicaciones ilimitadas</span></div>
+        <div class="benefit"><span>Comentarios sin restricción</span></div>
+        <div class="benefit"><span>Acceso prioritario a noticias</span></div>
+        <div class="benefit"><span>Soporte directo 24/7</span></div>
+        <div class="benefit"><span>Insignia Premium en tu perfil</span></div>
+        <div class="benefit"><span>Estadísticas avanzadas</span></div>
+      </div>
+    </div>
+
+    <div class="pricing-card">
+      <div class="badge">PLAN ANUAL</div>
+      <div class="price">$99<span style="font-size:24px">/año</span></div>
+      <div class="price-sub">O $9.99/mes cancelable en cualquier momento</div>
+
+      <div class="features">
+        <div class="feature"><span>Sin anuncios</span></div>
+        <div class="feature"><span>Personalización completa</span></div>
+        <div class="feature"><span>Exportar datos</span></div>
+        <div class="feature"><span>API acceso</span></div>
+        <div class="feature"><span>Temas premium</span></div>
+        <div class="feature"><span>Almacenamiento 5GB</span></div>
+      </div>
+
+      <form method="POST" action="{{ url_for('actualizar_premium') }}">
+        <button class="cta-btn" type="submit">Activar Premium Ahora</button>
+      </form>
+
+      <div style="margin-top:16px; text-align:center; font-size:12px; color:rgba(230,238,248,0.5)">
+        Pago seguro con encriptación SSL. Puedes cancelar en cualquier momento.
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <h2 class="faq-title">Preguntas frecuentes</h2>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Puedo cancelar mi suscripción en cualquier momento?</summary>
+        <p>Sí, tu suscripción Premium es flexible. Puedes cancelar en cualquier momento desde la configuración de tu cuenta, sin penalización.</p>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Qué sucede con mis datos si cancelo?</summary>
+        <p>Todos tus datos (publicaciones, comentarios, perfil) se mantienen en tu cuenta. Solo pierdes acceso a funciones Premium, pero puedes reactivar en cualquier momento.</p>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Se renova automáticamente?</summary>
+        <p>Sí, tu suscripción se renueva automáticamente en la fecha de vencimiento. Recibirás una notificación 7 días antes de cada renovación.</p>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Hay período de prueba?</summary>
+        <p>Sí, puedes acceder a Premium por 7 días gratis. Sin tarjeta de crédito requerida para comenzar.</p>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Qué métodos de pago aceptan?</summary>
+        <p>Aceptamos tarjetas de crédito/débito (Visa, Mastercard, Amex), PayPal, transferencia bancaria y billeteras digitales locales.</p>
+      </details>
+    </div>
+
+    <div class="faq-item">
+      <details>
+        <summary>¿Hay descuentos para grupos o organizaciones?</summary>
+        <p>Sí. Contacta a soporte@agora.local para consultar sobre planes empresariales y descuentos por volumen.</p>
+      </details>
+    </div>
+  </section>
+
+  <section style="background:linear-gradient(90deg, rgba(27,55,76,0.3), rgba(123,166,190,0.1)); padding:60px 20px; text-align:center; margin-top:40px">
+    <div style="max-width:800px; margin:0 auto">
+      <h2 style="font-size:36px; font-weight:900; color:var(--secondary); margin:0 0 12px">¿Tienes dudas?</h2>
+      <p style="color:rgba(230,238,248,0.7); margin:0 0 20px">Nuestro equipo está aquí para ayudarte en cualquier momento.</p>
+      <a href="{{ url_for('help') }}" class="btn" style="display:inline-block">Contactar Soporte</a>
+    </div>
+  </section>
+
+  <div style="max-width:1200px; margin:40px auto; padding:0 20px">
+    <span class="user-greeting">
+      Hola, {{ username }}
+      {% if is_premium %}
+        <span class="premium-badge" title="Cuenta Premium activa">⭐ PREMIUM</span>
+      {% endif %}
+    </span>
+
+    <div class="center-actions">
+      <form class="search" role="search" action="{{ url_for('dashboard') }}" method="get">
+        <input type="search" name="q" placeholder="Buscar..." aria-label="Buscar" value="{{ q or '' }}" />
+        <button type="submit" class="small-btn">Buscar</button>
+      </form>
+
+      <!-- Contador mejorado para usuarios free -->
+      {% if not is_premium %}
+        <div class="interaction-counter" title="Interacciones restantes para usuarios sin Premium">
+          <span class="counter-label">Interacciones:</span>
+          <span class="counter-value">{{ interactions_left }}/5</span>
+          <a href="{{ url_for('actualizar_premium') }}" class="upgrade-link-header" title="Actualizar a Premium">
+            ⭐ Premium
+          </a>
+        </div>
+      {% endif %}
+
+      <a href="{{ url_for('perfil') }}" class="profile-icon" title="Mi perfil" aria-label="Mi perfil">
+        <i class="fa-solid fa-user"></i>
+      </a>
+
+      <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+    </div>
+  </div>
+
+  <script>
+    // Animaciones suaves al scroll
+    document.querySelectorAll('details').forEach(detail => {
+      detail.addEventListener('click', ()=>{ 
+        setTimeout(()=>{ detail.scrollIntoView({behavior:'smooth', block:'nearest'}) }, 100)
+      })
+    })
+  </script>
+</body>
+</html>

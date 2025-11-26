@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil — {{ display_name or usuario.nombre_usuario if usuario else 'Usuario' }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+</head>
+<body>
+
+  <!-- Flash / toast -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div id="toasts" aria-live="polite" aria-atomic="true">
+        {% for category, msg in messages %}
+          <div class="toast toast-{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="profile-main">
+    <section class="profile-card">
+      <div class="banner"></div>
+
+      <div class="profile-header">
+        <div class="profile-avatar">
+          {% if avatar %}
+            <img src="{{ url_for('static', filename=avatar) }}" alt="Avatar">
+          {% elif usuario and usuario.get('avatar') %}
+            <img src="{{ url_for('static', filename=usuario.avatar) }}" alt="Avatar">
+          {% else %}
+            <span class="avatar-initial">{{ (display_name or usuario.nombre_usuario if usuario else 'U')[0]|upper }}</span>
+          {% endif %}
+        </div>
+
+        <div class="profile-info">
+          <h1>{{ display_name or (usuario.nombre_usuario if usuario else '') }}</h1>
+          <p class="role">{{ role }}</p>
+          <p class="location"><strong>Email:</strong> {{ email }}</p>
+          <p class="location">{{ location }}</p>
+
+          <div class="profile-actions">
+            <a href="{{ url_for('editar_perfil') }}" class="btn edit">Edit Profile</a>
+            <a href="{{ url_for('configuracion') }}" class="btn ghost">Settings</a>
+            <a href="{{ url_for('dashboard') }}" class="btn ghost">Volver al dashboard</a>
+          </div>
+
+          <div class="skills">
+            {% if usuario and usuario.get('skills') %}
+              {% for s in usuario.skills.split(',') %}
+                <span class="chip">{{ s.strip() }}</span>
+              {% endfor %}
+            {% else %}
+              <span class="chip">HTML</span>
+              <span class="chip">CSS</span>
+              <span class="chip">Python</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-body">
+        <div class="cards">
+          <article class="action-card">
+            <div class="card-icon">🎯</div>
+            <h3>Ready for work</h3>
+            <p>Indica a los reclutadores que estás disponible.</p>
+            <a href="#" class="card-link">Activar →</a>
+          </article>
+
+          <article class="action-card">
+            <div class="card-icon">✍️</div>
+            <h3>Share posts</h3>
+            <p>Comparte noticias y aumenta tu visibilidad.</p>
+            <a href="#" class="card-link">Publicar →</a>
+          </article>
+
+          <article class="action-card">
+            <div class="card-icon">🔄</div>
+            <h3>Update</h3>
+            <p>Mantén tu perfil actualizado.</p>
+            <a href="#" class="card-link">Editar →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <aside class="profile-side">
+      <div class="profile-card-side">
+        <h4>Resumen</h4>
+        <p><strong>Correo:</strong> {{ email }}</p>
+        <p><strong>Teléfono:</strong> {{ usuario.telefono if usuario and usuario.telefono else '' }}</p>
+      </div>
+    </aside>
+  </main>
+
+  <style>
+    /* toasts mínimos */
+    #toasts { position: fixed; top: 16px; right: 16px; z-index: 9999; display:flex; flex-direction:column; gap:8px; }
+    .toast { padding:10px 14px; border-radius:10px; color:#fff; font-weight:700; box-shadow:0 6px 18px rgba(11,22,30,0.12); opacity:1; transition:opacity .28s, transform .28s; }
+    .toast-success { background: #2f9e44; }
+    .toast-warning { background: #f59f00; }
+    .toast-danger { background: #e03131; }
+    .toast-info { background: #1b74ff; }
+  </style>
+
+  <script>
+    // auto-hide toasts después de 3s
+    window.addEventListener('DOMContentLoaded', () => {
+      const toasts = document.querySelectorAll('#toasts .toast');
+      toasts.forEach((t, i) => {
+        setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-6px)'; }, 3000 + i*250);
+        setTimeout(() => { if(t.parentNode) t.parentNode.removeChild(t); }, 3400 + i*250);
+      });
+    });
+  </script>
+</body>
+</html>

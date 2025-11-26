@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Panel Admin — AGORA{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">AG</div>
+        <div>
+          <h2>AGORA Admin</h2>
+          <div class="small">Panel de administración</div>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.path=='/' else '' }}">Inicio</a>
+        <a href="{{ url_for('noticias') }}" class="{{ 'active' if request.path.startswith('/noticias') else '' }}">Noticias</a>
+        <a href="{{ url_for('reportes') }}" class="{{ 'active' if request.path.startswith('/reportes') else '' }}">Reportes</a>
+        <a href="{{ url_for('pagos') }}" class="{{ 'active' if request.path.startswith('/pagos') else '' }}">Pagos</a>
+        <a href="{{ url_for('limites') }}" class="{{ 'active' if request.path.startswith('/limites') else '' }}">Límites</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+      </nav>
+
+      <div style="margin-top:auto">
+        <div class="small">Versión</div>
+        <div class="small">1.0 • &copy; Agora</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="crumbs">
+          {% block header %}{% endblock %}
+        </div>
+        <div class="actions">
+          <div class="avatar">{{ session.get('admin_username','AD')[:2] }}</div>
+        </div>
+      </header>
+
+      <section class="grid" style="align-items:start">
+        {% block content %}{% endblock %}
+      </section>
+
+      <footer class="footer">AGORA — Panel administrador</footer>
+    </main>
+  </div>
+</body>
+</html>

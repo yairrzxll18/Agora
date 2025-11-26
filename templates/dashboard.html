@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGORA - Menú principal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+{# Macro para renderizar comentarios (pegar aquí, UNA vez) #}
+{% macro render_comment(c) %}
+<div class="comment">
+  <div class="avatar">{{ c.nombre_usuario[0]|upper }}</div>
+  <div class="comment-body">
+    <div class="comment-meta">
+      <strong>{{ c.nombre_usuario }}</strong>
+      <span class="dot">•</span>
+      <small class="comment-date">{{ c.fecha_creacion }}</small>
+    </div>
+    <div class="comment-text">{{ c.contenido }}</div>
+    <div class="comment-actions">
+      <button type="button" class="small-btn" onclick="toggleReplyForm('reply-{{ c.id_respuesta }}')">Responder</button>
+    </div>
+
+    <form id="reply-{{ c.id_respuesta }}" class="reply-form" action="{{ url_for('comentar', id_publicacion=c.id_publicacion) }}" method="post" style="display:none; margin-top:8px;">
+      <input type="hidden" name="parent_id" value="{{ c.id_respuesta }}">
+      <input name="comentario" type="text" placeholder="Responder..." required>
+      <button class="send-btn" type="submit">Enviar</button>
+      <button type="button" class="small-btn" onclick="toggleReplyForm('reply-{{ c.id_respuesta }}')">Cancelar</button>
+    </form>
+
+    {% if c.children %}
+      <div class="replies">
+        {% for child in c.children %}
+          {{ render_comment(child) }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}
+
+  <header class="topbar">
+  <div class="logo-area selected" role="img" aria-label="Logo - área seleccionada">
+    <img src="{{ url_for('static', filename='imagenes/logo.jpg') }}" alt="Logo Agora"/>
+    <span class="logo-text">AGORA</span>
+  </div>
+
+  <!-- Añadido: Mostrar badge premium -->
+  <span class="user-greeting">
+    Hola, {{ username }}
+    {% if is_premium %}
+      <span class="premium-badge">⭐ PREMIUM</span>
+    {% endif %}
+  </span>
+
+  <div class="center-actions">
+    <form class="search" role="search" action="{{ url_for('dashboard') }}" method="get">
+      <input type="search" name="q" placeholder="Buscar..." aria-label="Buscar" value="{{ q or '' }}" />
+      <button type="submit" class="small-btn">Buscar</button>
+    </form>
+
+    <!-- Añadido: Contador de interacciones para usuarios free -->
+    {% if not is_premium %}
+      <div class="interaction-counter" title="Interacciones restantes">
+        Interacciones restantes: {{ interactions_left }}/5
+        <a href="{{ url_for('actualizar_premium') }}" class="upgrade-link" style="margin-left:8px; font-weight:700; text-decoration:none;">Actualizar a Premium</a>
+      </div>
+    {% endif %}
+
+    <!-- BOTÓN: Crear publicación (restaurado) -->
+    <button id="openPostModal" class="create-post-btn" type="button" aria-haspopup="dialog" aria-controls="postModal" title="Crear publicación"
+            {% if not is_premium and interactions_left is not none and interactions_left <= 0 %}disabled{% endif %}>
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span class="visually-hidden">Crear publicación</span>
+    </button>
+
+    <a href="{{ url_for('perfil') }}" class="profile-icon" title="Mi perfil" aria-label="Mi perfil">
+      <i class="fa-solid fa-user"></i>
+    </a>
+
+    <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+  </div>
+</header>
+
+  <div class="container">
+    <!-- LEFT COLUMN -->
+    <aside class="left-news">
+      <nav class="nav">
+        <a class="home" href="#">Home</a>
+      </nav>
+
+      <section class="news-row">
+        <div class="news-card">NOTICIA</div>
+        <div class="news-card">NOTICIA</div>
+        <div class="news-card">NOTICIA</div>
+        <div class="news-card">NOTICIA</div>
+      </section>
+
+      <div class="box-title">GENERAL</div>
+
+
+      <nav class="sections-list">
+        <ul>
+          <li><a href="#">Sobre Agora</a></li>
+          <li><a href="#">Versión Pro</a></li>
+          <li><a href="{{ url_for('pagos_universidad') }}">Pagos Escolores</a></li>
+          <li><a href="{{ url_for('extraordinarios') }}">Extraordinarios</a></li>
+          <li>
+            <!-- Enlace Ayuda: navega a la página de Preguntas Frecuentes -->
+            <a href="{{ url_for('help') }}" class="help-btn">Centro de Ayuda</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- FILTROS ARRIBA DE LAS PUBLICACIONES -->
+      <div class="filters-top" role="region" aria-label="Filtros de publicaciones">
+
+        <div class="filters-row" aria-hidden="false">
+          <div class="buttons">
+            <a href="{{ url_for('dashboard', carrera='todas', q=q) }}" class="career-btn {% if carrera_filtro == 'todas' %}active{% endif %}">Todas</a>
+            {% for carrera in carreras %}
+              <a href="{{ url_for('dashboard', carrera=carrera.id_carrera, q=q) }}"
+                 class="career-btn {% if carrera.id_carrera|string == carrera_filtro|string %}active{% endif %}">
+                {{ carrera.nombre_carrera }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Publicaciones dinámicas -->
+      {% for pub in publicaciones %}
+      <article class="post" id="post-{{ pub.id_publicacion }}">
+        <div class="post-header">
+          <div class="post-title">
+            <h3>{{ pub.titulo }}</h3>
+            <div class="post-meta">
+              <span class="post-user">{{ pub.nombre_usuario }}</span>
+              <span class="dot">•</span>
+              <span class="post-date">{{ pub.fecha_creacion }}</span>
+              <span class="dot">•</span>
+              <span class="post-career">{{ pub.nombre_carrera }}</span>
+            </div>
+          </div>
+        </div>
+
+        {% if pub.imagen %}
+        <div class="post-media">
+          <img src="{{ url_for('static', filename=pub.imagen) }}" alt="Imagen publicación">
+        </div>
+        {% endif %}
+
+        <div class="post-body">
+          <p>{{ pub.contenido }}</p>
+        </div>
+
+        <div class="post-actions">
+          <button class="icon-btn comment-btn" onclick="expandPost('{{ pub.id_publicacion }}')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Comentar</span>
+          </button>
+
+          <button class="icon-btn like-btn" onclick="likePost('{{ pub.id_publicacion }}')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="like-count-{{ pub.id_publicacion }}">{{ pub.likes or 0 }}</span>
+          </button>
+        </div>
+
+        <div class="expanded-post" id="expanded-{{ pub.id_publicacion }}" aria-hidden="true">
+          <div class="expanded-inner">
+            <section class="comments-panel">
+              <h4>Comentarios</h4>
+              <div class="comment-list">
+                {% set roots = comentarios_tree.get(pub.id_publicacion, []) %}
+                {% if roots %}
+                  {% for c in roots %}
+                    {{ render_comment(c) }}
+                  {% endfor %}
+                {% else %}
+                  <p class="no-comments">Sé el primero en comentar.</p>
+                {% endif %}
+              </div>
+
+              <form class="comment-form" action="{{ url_for('comentar', id_publicacion=pub.id_publicacion) }}" method="post">
+                <input name="comentario" type="text" placeholder="Añadir un comentario..." required>
+                <button type="submit" class="send-btn">Publicar</button>
+              </form>
+            </section>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </main>
+
+    <!-- RIGHT COLUMN -->
+    <aside class="right-column">
+      <!-- COMUNIDADES PREMIUM MEJORADO -->
+      {% if is_premium %}
+        <div class="communities premium-communities">
+          <div class="premium-header">
+            <span class="premium-star">⭐</span>
+            <h3>Comunidades Premium</h3>
+            <span class="badge-exclusive">EXCLUSIVO</span>
+          </div>
+          
+          <div class="premium-content">
+            <p class="premium-desc">Acceso a foros exclusivos y canales privados para miembros premium.</p>
+            
+            <div class="community-cards">
+              <div class="community-mini-card">
+                <div class="card-icon">🎓</div>
+                <div class="card-name">UTA Estudiantes</div>
+                <div class="card-members">+45 miembros</div>
+              </div>
+              
+              <div class="community-mini-card">
+                <div class="card-icon">💻</div>
+                <div class="card-name">Sistemas</div>
+                <div class="card-members">+67 miembros</div>
+              </div>
+              
+              <div class="community-mini-card">
+                <div class="card-icon">📊</div>
+                <div class="card-name">Administración</div>
+                <div class="card-members">+38 miembros</div>
+              </div>
+              
+              <div class="community-mini-card">
+                <div class="card-icon">🎨</div>
+                <div class="card-name">Diseño</div>
+                <div class="card-members">+52 miembros</div>
+              </div>
+            </div>
+            
+            <a href="{{ url_for('actualizar_premium') }}" class="view-all-communities">Ver todas las comunidades →</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="communities locked">
+          <div class="lock-header">
+            <div class="lock-icon-animated">🔒</div>
+            <h3>Comunidades Premium</h3>
+          </div>
+          
+          <div class="locked-content">
+            <p class="locked-desc">Desbloquea acceso exclusivo a comunidades privadas y foros especializados</p>
+            
+            <div class="preview-communities-grid">
+              <div class="preview-item">
+                <span class="preview-icon">🎓</span>
+                <span class="preview-name">Universidad</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-icon">💻</span>
+                <span class="preview-name">Desarrollo</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-icon">🔧</span>
+                <span class="preview-name">Automatización</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-icon">📊</span>
+                <span class="preview-name">Marketing</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-icon">🎨</span>
+                <span class="preview-name">Diseño</span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-icon">🍳</span>
+                <span class="preview-name">Cocina</span>
+              </div>
+            </div>
+            
+            <div class="upgrade-card">
+              <div class="upgrade-price">
+                <span class="price-tag">$99</span>
+                <span class="price-period">/año</span>
+              </div>
+              <div class="upgrade-benefits">
+                <div class="benefit-item">✨ Comunidades exclusivas</div>
+                <div class="benefit-item">✨ Sin límite de posts</div>
+                <div class="benefit-item">✨ Soporte prioritario</div>
+              </div>
+              <a href="{{ url_for('actualizar_premium') }}" class="upgrade-btn-epic">
+                <span class="btn-text">⭐ Obtener Premium</span>
+                <span class="btn-shine"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="location-card">
+        <div class="location-icon">📍</div>
+        <div class="location-text">
+          <strong>UNIVERSIDAD TECNOLÓGICA DE ACAPULCO</strong><br/>
+          <span class="location-address">AV...</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="footer">&copy; AGORA - 2025</footer>
+
+  <!-- MODAL PUBLICACIÓN -->
+  <div id="postModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="postModalTitle">
+    <div class="modal-content" role="document">
+      <button class="close-btn" id="closePostModal" aria-label="Cerrar diálogo">&times;</button>
+      <h2 id="postModalTitle">Crear publicación</h2>
+      <form id="postForm" action="{{ url_for('crear_publicacion') }}" method="POST" enctype="multipart/form-data">
+        <label for="postTitle">Título:</label>
+        <input type="text" id="postTitle" name="postTitle" placeholder="Título de la publicación" required>
+        <label for="postText">Contenido:</label>
+        <textarea id="postText" name="postText" placeholder="¿Qué deseas compartir?" required></textarea>
+        <label for="postImages">Imágenes:</label>
+        <input type="file" id="postImages" name="postImages" accept="image/*" multiple>
+        <div id="imagePreview" class="preview" aria-live="polite"></div>
+        <label for="postCarrera">Carrera:</label>
+        <select id="postCarrera" name="postCarrera" required>
+          {% for carrera in carreras %}
+            <option value="{{ carrera.id_carrera }}">{{ carrera.nombre_carrera }}</option>
+          {% endfor %}
+        </select>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="cancelPost">Cancelar</button>
+          <button type="submit" class="publish-btn">Publicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+ 
+
+  <script>
+
+    // MODAL PUBLICACIÓN
+    const openModalBtn = document.getElementById("openPostModal");
+    const modal = document.getElementById("postModal");
+    const closeModalBtn = document.getElementById("closePostModal");
+    const cancelPostBtn = document.getElementById("cancelPost");
+    const imageInput = document.getElementById("postImages");
+    const previewContainer = document.getElementById("imagePreview");
+    const postForm = document.getElementById("postForm");
+
+    openModalBtn.addEventListener("click", () => {
+      modal.style.display = "flex";
+      modal.setAttribute("aria-hidden", "false");
+      document.getElementById("postText").focus();
+    });
+
+    function closeModalAndReset() {
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+      postForm.reset();
+      previewContainer.innerHTML = "";
+    }
+
+    closeModalBtn.addEventListener("click", closeModalAndReset);
+    cancelPostBtn.addEventListener("click", closeModalAndReset);
+    modal.addEventListener("click", (e) => { if(e.target === modal) closeModalAndReset(); });
+
+    imageInput.addEventListener("change", () => {
+      previewContainer.innerHTML = "";
+      Array.from(imageInput.files).forEach(file => {
+        if(!file.type.startsWith("image/")) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.alt = file.name;
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // MODAL PAGOS
+    const openPagosModalBtn = document.getElementById("openPagosModal");
+    const pagosModal = document.getElementById("pagosModal");
+    const closePagosModalBtn = document.getElementById("closePagosModal");
+    const cancelPagosBtn = document.getElementById("cancelPagos");
+    const pagosForm = document.getElementById("pagosForm");
+
+    openPagosModalBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      pagosModal.style.display = "flex";
+      pagosModal.setAttribute("aria-hidden", "false");
+      document.getElementById("nombreAlumno").focus();
+    });
+
+    function closePagosModalAndReset() {
+      pagosModal.style.display = "none";
+      pagosModal.setAttribute("aria-hidden", "true");
+      pagosForm.reset();
+    }
+
+    closePagosModalBtn.addEventListener("click", closePagosModalAndReset);
+    cancelPagosBtn.addEventListener("click", closePagosModalAndReset);
+    pagosModal.addEventListener("click", (e) => { if(e.target === pagosModal) closePagosModalAndReset(); });
+    pagosForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Pago guardado (funcionalidad de backend pendiente)");
+      closePagosModalAndReset();
+    });
+
+    const menuToggle = document.getElementById('menuToggle');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    menuToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+      dropdownMenu.setAttribute('aria-hidden', dropdownMenu.style.display !== 'block');
+    });
+
+    document.addEventListener('click', function() {
+      dropdownMenu.style.display = 'none';
+      dropdownMenu.setAttribute('aria-hidden', 'true');
+    });
+
+    dropdownMenu.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  </script>
+  <script>
+  // Hacer colapsables todas las publicaciones
+  (function(){
+    // selección de botones (soporta posts que se carguen dinámicamente si vuelves a ejecutar init)
+    function initCollapseButtons() {
+      document.querySelectorAll('.collapse-btn').forEach(btn => {
+        // evitar duplicar listeners
+        if (btn.dataset._collapseBound) return;
+        btn.dataset._collapseBound = "1";
+
+        btn.addEventListener('click', function(e){
+          const article = btn.closest('.post');
+          if (!article) return;
+          const body = article.querySelector('.post-body');
+          if (!body) return;
+
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+
+          if (expanded) {
+            // colapsar
+            btn.setAttribute('aria-expanded','false');
+            btn.textContent = '►';
+            body.classList.remove('expanded');
+            body.classList.add('collapsed');
+            // para que quede display none después de animación (evita salto)
+            setTimeout(()=> { if (body.classList.contains('collapsed')) body.style.display = 'none'; }, 240);
+          } else {
+            // expandir
+            body.style.display = ''; // restaurar
+            // fuerza reflow para que la transición funcione
+            void body.offsetWidth;
+            body.classList.remove('collapsed');
+            body.classList.add('expanded');
+            btn.setAttribute('aria-expanded','true');
+            btn.textContent = '▼';
+          }
+        });
+      });
+    }
+
+    // inicializa al cargar DOM
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCollapseButtons);
+    } else {
+      initCollapseButtons();
+    }
+
+    // Si tus posts se actualizan por AJAX o por render dinámico,
+    // llama de nuevo a initCollapseButtons() tras insertar nuevos posts.
+    window.initAgoraCollapse = initCollapseButtons;
+  })();
+</script>
+<script>
+function toggleComments(id) {
+  const el = document.getElementById(id);
+  if (el.style.display === "none" || el.style.display === "") {
+    el.style.display = "block";
+  } else {
+    el.style.display = "none";
+  }
+}
+</script>
+<script>
+/* Toggle expanded post (muestra solo una a la vez) */
+function expandPost(id) {
+  document.querySelectorAll('.expanded-post').forEach(el => {
+    if (el.id === 'expanded-' + id) {
+      const visible = el.getAttribute('aria-hidden') === 'false';
+      el.style.display = visible ? 'none' : 'block';
+      el.setAttribute('aria-hidden', visible ? 'true' : 'false');
+      if (!visible) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      el.style.display = 'none';
+      el.setAttribute('aria-hidden', 'true');
+    }
+  });
+}
+
+/* Like (frontend) */
+function likePost(id) {
+  const span = document.getElementById('like-count-' + id);
+  let n = parseInt(span.textContent) || 0;
+  n++;
+  span.textContent = n;
+  // opcional: enviar fetch POST para persistir en backend
+}
+
+/* Comentario: up/down votes (solo UI) */
+function upvoteComment(e){ e.currentTarget.classList.toggle('voted'); }
+function downvoteComment(e){ e.currentTarget.classList.toggle('voted'); }
+
+/* Cerrar expanded clic afuera */
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.post')) {
+    document.querySelectorAll('.expanded-post').forEach(el => {
+      el.style.display = 'none';
+      el.setAttribute('aria-hidden', 'true');
+    });
+  }
+});
+</script>
+<script>
+function toggleReplyForm(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+  if (el.style.display === 'block') {
+    const input = el.querySelector('input[name="comentario"]');
+    if (input) input.focus();
+  }
+}
+</script>
+
+<style>
+/* COMUNIDADES PREMIUM - ESTILOS MEJORADOS CON PALETA OFICIAL */
+
+.communities {
+  background: linear-gradient(135deg, rgba(27,55,76,0.3), rgba(123,166,190,0.1));
+  border: 1px solid rgba(228,214,170,0.2);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  animation: cardSlideIn 0.6s ease-out;
+}
+
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(20px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+
+/* PREMIUM COMMUNITIES (PARA USUARIOS PREMIUM) */
+.premium-communities {
+  background: linear-gradient(135deg, rgba(228,214,170,0.12), rgba(27,55,76,0.08));
+  border: 2px solid #E4D6AA;
+  box-shadow: 0 12px 40px rgba(228,214,170,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.premium-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.premium-star {
+  font-size: 20px;
+  animation: starPulse 2s ease-in-out infinite;
+  color: #E4D6AA;
+}
+
+@keyframes starPulse {
+  0%, 100% { transform: scale(1); opacity: 1 }
+  50% { transform: scale(1.2); opacity: 0.8 }
+}
+
+.premium-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1B374C;
+  flex: 1;
+}
+
+.badge-exclusive {
+  background: linear-gradient(90deg, #E4D6AA, #D4C494);
+  color: #1B374C;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(228,214,170,0.25);
+}
+
+.premium-desc {
+  color: rgba(27,55,76,0.85);
+  font-size: 13px;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.community-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.community-mini-card {
+  background: linear-gradient(135deg, rgba(122,166,190,0.15), rgba(198,202,175,0.1));
+  border: 1.5px solid #7BA6BE;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.community-mini-card:hover {
+  transform: translateY(-4px);
+  border-color: #E4D6AA;
+  background: linear-gradient(135deg, rgba(228,214,170,0.2), rgba(122,166,190,0.15));
+  box-shadow: 0 12px 32px rgba(228,214,170,0.2);
+}
+
+.card-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+  display: inline-block;
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+.community-mini-card:nth-child(2) .card-icon { animation-delay: 0.2s }
+.community-mini-card:nth-child(3) .card-icon { animation-delay: 0.4s }
+.community-mini-card:nth-child(4) .card-icon { animation-delay: 0.6s }
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0) }
+  50% { transform: translateY(-4px) }
+}
+
+.card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1B374C;
+  margin-bottom: 4px;
+}
+
+.card-members {
+  font-size: 11px;
+  color: #7BA6BE;
+  font-weight: 600;
+}
+
+.view-all-communities {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  color: #7BA6BE;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.view-all-communities:hover {
+  background: rgba(122,166,190,0.15);
+  color: #E4D6AA;
+  border-color: #E4D6AA;
+}
+
+/* LOCKED COMMUNITIES (PARA USUARIOS FREE) */
+.locked {
+  background: linear-gradient(135deg, rgba(198,202,175,0.08), rgba(122,166,190,0.05));
+  border: 2px solid #C6CAAF;
+  position: relative;
+  overflow: hidden;
+}
+
+.locked::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(198,202,175,0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.lock-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.lock-icon-animated {
+  font-size: 24px;
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.lock-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1B374C;
+}
+
+.locked-desc {
+  color: #7BA6BE;
+  font-size: 13px;
+  margin: 0 0 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.preview-communities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.preview-item {
+  background: linear-gradient(135deg, rgba(122,166,190,0.1), rgba(198,202,175,0.08));
+  border: 1px solid #C6CAAF;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  opacity: 0.75;
+  transition: all 0.2s ease;
+}
+
+.preview-item:hover {
+  opacity: 1;
+  border-color: #E4D6AA;
+  background: linear-gradient(135deg, rgba(228,214,170,0.12), rgba(122,166,190,0.1));
+}
+
+.preview-icon {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.preview-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1B374C;
+}
+
+.upgrade-card {
+  background: linear-gradient(135deg, rgba(122,166,190,0.12), rgba(228,214,170,0.08));
+  border: 1.5px solid #7BA6BE;
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.upgrade-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.price-tag {
+  font-size: 24px;
+  font-weight: 900;
+  color: #E4D6AA;
+}
+
+.price-period {
+  font-size: 12px;
+  color: #7BA6BE;
+  font-weight: 600;
+}
+
+.upgrade-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.benefit-item {
+  font-size: 11px;
+  color: #1B374C;
+  font-weight: 600;
+}
+
+.upgrade-btn-epic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: linear-gradient(135deg, #E4D6AA 0%, #7BA6BE 100%);
+  color: #1B374C;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(228,214,170,0.25);
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.upgrade-btn-epic:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(228,214,170,0.4);
+  background: linear-gradient(135deg, #7BA6BE 0%, #E4D6AA 100%);
+}
+
+.btn-text {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+}
+
+.btn-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shine 3s ease infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) }
+  50% { transform: translateX(100%) }
+  100% { transform: translateX(100%) }
+}
+
+/* LOCATION CARD */
+.location-card {
+  background: linear-gradient(135deg, rgba(122,166,190,0.08), rgba(198,202,175,0.05));
+  border: 1px solid #C6CAAF;
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.location-icon {
+  font-size: 20px;
+  flex: 0 0 auto;
+  animation: locationFloat 2s ease-in-out infinite;
+}
+
+@keyframes locationFloat {
+  0%, 100% { transform: translateY(0) }
+  50% { transform: translateY(-4px) }
+}
+
+.location-text {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #1B374C;
+}
+
+.location-text strong {
+  color: #1B374C;
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 800;
+}
+
+.location-address {
+  color: #7BA6BE;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .community-cards { grid-template-columns: repeat(2, 1fr) }
+  .preview-communities-grid { grid-template-columns: repeat(2, 1fr) }
+  .premium-header { flex-wrap: wrap }
+  .badge-exclusive { margin-left: auto }
+}
+</style>
+</body>
+</html>
+

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Panel — Inicio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">AG</div>
+        <div>
+          <h2>AGORA Admin</h2>
+          <div class="small">Panel de administración</div>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.path=='/' else '' }}">Inicio</a>
+        <a href="{{ url_for('noticias') }}" class="{{ 'active' if request.path.startswith('/noticias') else '' }}">Noticias</a>
+        <a href="{{ url_for('reportes') }}" class="{{ 'active' if request.path.startswith('/reportes') else '' }}">Reportes</a>
+        <a href="{{ url_for('pagos') }}" class="{{ 'active' if request.path.startswith('/pagos') else '' }}">Pagos</a>
+        <a href="{{ url_for('limites') }}" class="{{ 'active' if request.path.startswith('/limites') else '' }}">Límites</a>
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+      </nav>
+
+      <div style="margin-top:auto">
+        <div class="small">Versión</div>
+        <div class="small">1.0 • &copy; Agora</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div class="avatar" style="width:56px;height:56px;border-radius:10px;font-size:18px">
+              {{ session.get('admin_username','AD')[:2] }}
+            </div>
+            <div>
+              <div style="font-size:18px;font-weight:800">Hola, {{ session.get('admin_username','Administrador') }}</div>
+              <div class="small">Bienvenido al panel de administración</div>
+            </div>
+          </div>
+        </div>
+
+      </header>
+
+      <section class="grid" style="align-items:start">
+        <div class="card col-12">
+          <div style="display:flex;gap:18px;flex-wrap:wrap">
+            <div class="card col-3 kpi">
+              <div class="label small">Noticias</div>
+              <div class="value">{{ total_noticias }}</div>
+            </div>
+            <div class="card col-3 kpi">
+              <div class="label small">Reportes</div>
+              <div class="value">{{ total_reportes }}</div>
+            </div>
+            <div class="card col-3 kpi">
+              <div class="label small">Pagos</div>
+              <div class="value">{{ total_pagos }}</div>
+            </div>
+            <div class="card col-3 kpi">
+              <div class="label small">Usuarios</div>
+              <div class="value">{{ total_usuarios }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card col-8">
+          <h3>Últimas noticias</h3>
+          <div class="small">Acciones rápidas y actividad reciente.</div>
+        </div>
+
+        <div class="card col-4">
+          <h3>Atajos</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <a class="btn" href="{{ url_for('noticias') }}">Gestionar Noticias</a>
+            <a class="btn ghost" href="{{ url_for('reportes') }}">Revisar Reportes</a>
+            <a class="btn" href="{{ url_for('pagos') }}">Fechas de Pago</a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">AGORA — Panel administrador</footer>
+    </main>
+  </div>
+</body>
+</html> 
