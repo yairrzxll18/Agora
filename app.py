@@ -498,22 +498,23 @@ def editar_perfil():
         correo = request.form.get("correo", "").strip()
         rol = request.form.get("rol", "").strip()
         ubicacion = request.form.get("ubicacion", "").strip()
-        telefono = request.form.get("telefono", "").strip()
 
         try:
-            execute(
-                "UPDATE usuarios SET nombre_usuario=%s, correo_usuario=%s, rol=%s, ubicacion=%s, telefono=%s WHERE id_usuario=%s",
-                (nombre, correo, rol, ubicacion, telefono, session["user_id"])
-            )
-            session["username"] = nombre or session.get("username")
+            execute("""
+                UPDATE usuarios
+                SET nombre_usuario = %s, correo_usuario = %s, rol = %s, ubicacion = %s
+                WHERE id_usuario = %s
+            """, (nombre, correo, rol, ubicacion, session["user_id"]))
+
             flash("Perfil actualizado.", "success")
+            return redirect(url_for("perfil"))
         except Exception as e:
-            print("Error actualizar perfil:", e)
-            flash("Error al actualizar el perfil.", "danger")
-        return redirect(url_for("perfil"))
+            print("Error perfil:", e)
+            flash("No se pudo actualizar el perfil.", "danger")
 
     usuario = fetch_one("SELECT * FROM usuarios WHERE id_usuario = %s", (session["user_id"],))
     return render_template("editar_perfil.html", usuario=usuario)
+
 
 
 @app.route("/configuracion", methods=["GET", "POST"])
